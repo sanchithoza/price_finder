@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        Product Price List
+    </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" src="header.js"></script>
+    <script type="text/javascript" src="./js/lodash.min.js"></script>
+</head>
+
+<body>
+
+    <nav id="navBar" class="navbar navbar-expand-md bg-dark navbar-dark">
+
+    </nav>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-7">
+                <div class="card overflow-auto">
+                    <div class="card-header">
+                        <h4>Product List</h4>
+                    </div>
+                    <div class="card-body">
+
+                        <table id="productList">
+                            <thead>
+                                <tr>
+                                    <th>Category</th>
+                                    <th>Sub Category</th>
+                                    <th>Model Number</th>
+                                    <th>Company</th>
+                                    <th>Price</th>
+                                    <th>Add to Cart</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-5">
+                <div class="card overflow-auto">
+                    <div class="card-header">
+                        <h4>Cart</h4>
+                    </div>
+                    <div class="card-body">
+                        <table class="table" id="cart">
+                            <thead>
+                                <tr>
+                                    <th>Category</th>
+                                    <th>Model Number</th>
+                                    <th>Company</th>
+                                    <th>Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="card-footer">
+                        <h3 id="cartTotal"></h3>
+                        <input type="button" class="btn btn-primary" id="submitCart" value="Create Quotation" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <script>
+        $(document).ready(function() {
+            let user = sessionStorage.getItem("fullName")
+            $('#submitCart').hide();
+            $('#navBar').html(navBar);
+            $('#userName').html(user)
+            $.get(`${url}/products`, async function(data) {
+                productList = data;
+                var length = data.length;
+                var table = $('#productList').DataTable();
+
+                table.clear()
+                for (var i = 0; i < length; i++) {
+                    $('#productList').dataTable().fnAddData([
+                        data[i].category,
+                        data[i].subCategory,
+                        data[i].modelNumber,
+                        data[i].company,
+                        data[i].customerPrice,
+                        `<a type="button" class="btn btn-primary" href="#" onclick="addToCart('${data[i]._id}')">Add</a>`
+                    ]);
+                }
+            });
+            //----------------------------
+            //add product modal events
+            //---------------------------
+
+            $("#submitCart").click(function() {
+                sessionStorage.setItem("cartData", JSON.stringify(cartData));
+                window.location.href = "createQuotation.html";
+            });
+
+
+
+        });
+        let cartData = []
+
+        function addToCart(id) {
+            let cartTotal = 0
+            $("#cart").find('tbody').empty()
+            $("#cartTotal").empty()
+            $.ajax({
+                type: "POST",
+                contentType: "application/json",
+                url: `${url}/getProductById`,
+                data: JSON.stringify({
+                    "id": id
+                }),
+                dataType: 'json',
+                success: async function(result) {
+                    cartData.push(result)
+                    cartData.forEach(element => {
+                        $("#cart").find('tbody').append(`<tr><td>${element.category}</td><td>${element.modelNumber}</td><td>${element.company}</td><td>${element.customerPrice}</td></tr>`)
+                        cartTotal = cartTotal + element.customerPrice
+                    });
+                    // $('#cart').dataTable()
+                    $('#cartTotal').append(`Total = ${cartTotal}`)
+                    $('#submitCart').show();
+                },
+                error: function(e) {
+                    // alert("Error!")
+                    console.log("ERROR: ", e);
+                }
+            });
+        }
+
+        //$("#message").html("hello")
+    </script>
+</body>
+
+</html>

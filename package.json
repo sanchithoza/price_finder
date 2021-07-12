@@ -1,0 +1,21 @@
+{
+    "name": "pricelist",
+    "version": "1.0.0",
+    "description": "price finder app for office/shop staff",
+    "main": "main.js",
+    "dependencies": {
+        "boom": "^7.3.0",
+        "boostrap": "^2.0.0",
+        "fastify": "^3.17.0",
+        "fastify-cors": "^5.1.0",
+        "lodash": "^4.17.21",
+        "mongoose": "^5.12.12"
+    },
+    "devDependencies": {},
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "node app.js"
+    },
+    "author": "Sanchit Oza",
+    "license": "ISC"
+}
