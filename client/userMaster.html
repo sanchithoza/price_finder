@@ -28,12 +28,12 @@
                     <div class="card-header">
                         <div class="row" style="padding: 8px; ">
                             <div class="col-md-6">
-                                <h4>Product Master</h4>
+                                <h4>User Master</h4>
                             </div>
                             <div class="col-md-6" style="text-align: right;">
                                 <!-- Button trigger modal -->
-                                <a type="button" class="btn btn-primary" href="addNewProduct.html">
-                            Add New Product
+                                <a type="button" class="btn btn-primary" href="addNewUser.html">
+                            Add New User
                                 </a>
                                 <!----------------------------->
                                 <!-- Add Product Modal Modal -->
@@ -49,17 +49,16 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <table id="productRegister" class="display">
+                        <table id="userRegister" class="display">
                             <thead>
                                 <tr>
                                     <th>edit/delete</th>
-                                    <th>Category</th>
-                                    <th>Sub Category</th>
-                                    <th>Model Number</th>
-                                    <th>Company</th>
-                                    <th>Discription</th>
-                                    <th>Dealer Price</th>
-                                    <th>Customer Price</th>
+                                    <th>Role</th>
+                                    <th>Full Name</th>
+                                    <th>Mobile Number</th>
+                                    <th>Email</th>
+                                    <th>Password</th>
+
                                 </tr>
                             </thead>
                             <tbody>
@@ -79,35 +78,15 @@
     <script>
         let user = sessionStorage.getItem("fullName")
         let role = sessionStorage.getItem("role")
-        $(document).ready(function() {
+        $(document).ready(async function() {
             $('#navBar').html(navBar);
             $('#userName').html(user)
-            $.get(`${url}/products`, function(data) {
-                console.log("populating data table...");
-                var length = data.length;
-                var table = $('#productRegister').DataTable();
-
-                table.clear()
-                for (var i = 0; i < length; i++) {
-                    $('#productRegister').dataTable().fnAddData([
-                        `<a  href='addNewProduct.html?edit=${data[i]._id}'>edit</a>/<a  href='#' onclick='deleteProduct("${data[i]._id}");'>delete</a>`,
-                        data[i].category,
-                        data[i].subCategory,
-                        data[i].modelNumber,
-                        data[i].company,
-                        data[i].discription,
-                        data[i].dealerPrice,
-                        data[i].customerPrice
-
-                    ]);
-                }
-            });
-            //----------------------------
-            //add product modal events
-            //---------------------------
-
-            $('#addProduct').click(() => {
-                window.location.href = "./addNewProduct.html"
+            await loadUser()
+                //----------------------------
+                //add product modal events
+                //---------------------------
+            $('#addUser').click(() => {
+                window.location.href = "./addNewUser.html"
             });
         });
 
@@ -119,11 +98,11 @@
             $.ajax({
                 type: "POST",
                 contentType: "application/json",
-                url: `${url}/deleteProduct`,
+                url: `${url}/deleteUser`,
                 data: JSON.stringify(argu),
                 dataType: 'json',
                 success: async function(data) {
-                    await loadTables()
+                    await loadUser()
                 },
                 error: function(e) {
                     alert("Error!")
@@ -132,8 +111,26 @@
             });
         }
 
+        function loadUser() {
+            $.get(`${url}/users`, function(data) {
+                console.log("populating data table...");
+                var length = data.length;
+                console.log(data);
+                var table = $('#userRegister').DataTable();
 
-        //$("#message").html("hello")
+                table.clear()
+                for (var i = 0; i < length; i++) {
+                    $('#userRegister').dataTable().fnAddData([
+                        `<a  href='addNewUser.html?edit=${data[i]._id}'>edit</a>/<a  href='#' onclick='deleteProduct("${data[i]._id}");'>delete</a>`,
+                        data[i].role,
+                        data[i].fullName,
+                        data[i].mobile,
+                        data[i].email,
+                        data[i].password
+                    ]);
+                }
+            });
+        }
     </script>
 </body>
 

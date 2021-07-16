@@ -3,6 +3,7 @@ if (sessionStorage.length <= 0) {
     alert("only registered users can access.")
     window.location.href = "index.html"
 }
+$("#userName").html(sessionStorage.getItem("fullName"));
 //==================================
 //==Ui Elements like modal and menu==>
 //==================================
@@ -41,6 +42,7 @@ if (sessionStorage.getItem("role") == "admin") {
 } else {
     navBar = commonNav + userDropDown;
 }
+
 
 //==================================
 //==Ui Elements like modal and menu==>

@@ -69,7 +69,7 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                <button type="button" class="btn btn-primary">Save changes</button>
+
                                             </div>
                                         </div>
                                     </div>
@@ -139,8 +139,12 @@
         </div>
     </div>
     <script>
+        let user = sessionStorage.getItem("fullName")
+        let role = sessionStorage.getItem("role")
+
         $(document).ready(async function() {
             $('#navBar').html(navBar);
+            $('#userName').html(user)
             let cartData = JSON.parse(sessionStorage.getItem("cartData"));
             await paintTable(cartData)
             await updateCartTotal()
@@ -156,31 +160,42 @@
                 var table = $('#productList').DataTable();
                 table.clear()
                 for (var i = 0; i < length; i++) {
+                    let price = (role == "customer") ? data[i].customerPrice : data[i].dealerPrice
                     $('#productList').dataTable().fnAddData([
                         data[i].category,
                         data[i].subCategory,
                         data[i].modelNumber,
                         data[i].company,
-                        data[i].customerPrice,
-                        `<input type="button" id="${data[i]._id}" class="btn btn-primary addProduct" value="add">`
+                        price,
+                        `<input type="button" id="${data[i]._id}" class="btn btn-primary addProduct" value="add" data-dismiss="modal">`
                     ]);
                 }
             });
             $(document).on('click', '.addProduct', async function() {
                 // your function here
                 let id = $(this).attr("id");
-                await $.ajax({
-                    type: "POST",
-                    contentType: "application/json",
-                    url: `${url}/getProductById`,
-                    data: JSON.stringify({
-                        "id": id
-                    }),
-                    dataType: 'json',
-                    success: async function(result) {
-                        await cartData.push(result)
-                    }
+                let addedIds = []
+                cartData.forEach(element => {
+                    addedIds.push(element._id)
                 });
+                //console.log(addedIds);
+                if (!addedIds.includes(id)) {
+                    await $.ajax({
+                        type: "POST",
+                        contentType: "application/json",
+                        url: `${url}/getProductById`,
+                        data: JSON.stringify({
+                            "id": id
+                        }),
+                        dataType: 'json',
+                        success: async function(result) {
+                            await cartData.push(result)
+                        }
+                    });
+                } else {
+                    alert("already in the cart ! !")
+                }
+
                 await paintTable(cartData)
             });
             $(document).on('click', '.removeProduct', async function() {
@@ -206,7 +221,8 @@
             $("#selectedProduct").find("tbody").empty()
             let srno = 1;
             await cartData.forEach(element => {
-                $("#selectedProduct").find("tbody").append(`<tr><td>${srno}</td><td>${element.company}-${element.category}-${element.modelNumber}</td><td><input type="number" class= "qty" min="1" value="1"></input></td><td class="perPc">${element.customerPrice}</td><td class="totAmt">${element.customerPrice}</td><td><a style="color:red" class="btn removeProduct" id="${element._id}">Remove</a></td></tr>`)
+                let price = (role == "customer") ? element.customerPrice : element.dealerPrice
+                $("#selectedProduct").find("tbody").append(`<tr><td>${srno}</td><td>${element.company}-${element.category}-${element.modelNumber}</td><td><input type="number" class= "qty" min="1" value="1"></input></td><td class="perPc">${price}</td><td class="totAmt">${price}</td><td><a style="color:red" class="btn removeProduct" id="${element._id}">Remove</a></td></tr>`)
                 srno++
             });
             await updateCartTotal()

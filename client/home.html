@@ -82,8 +82,10 @@
 
 
     <script>
+        let user = sessionStorage.getItem("fullName")
+        let role = sessionStorage.getItem("role")
         $(document).ready(function() {
-            let user = sessionStorage.getItem("fullName")
+
             $('#submitCart').hide();
             $('#navBar').html(navBar);
             $('#userName').html(user)
@@ -99,7 +101,7 @@
                         data[i].subCategory,
                         data[i].modelNumber,
                         data[i].company,
-                        data[i].customerPrice,
+                        (role == "customer") ? data[i].customerPrice : data[i].dealerPrice,
                         `<a type="button" class="btn btn-primary" href="#" onclick="addToCart('${data[i]._id}')">Add</a>`
                     ]);
                 }
@@ -112,16 +114,28 @@
                 sessionStorage.setItem("cartData", JSON.stringify(cartData));
                 window.location.href = "createQuotation.html";
             });
-
-
-
         });
         let cartData = []
 
         function addToCart(id) {
+            let addedIds = []
+            cartData.forEach(element => {
+                addedIds.push(element._id)
+            });
+            console.log(addedIds);
+            if (!addedIds.includes(id)) {
+                addNow(id);
+            } else {
+                alert("already added !!");
+            }
+        }
+
+
+        function addNow(id) {
             let cartTotal = 0
             $("#cart").find('tbody').empty()
             $("#cartTotal").empty()
+                //console.log(id);
             $.ajax({
                 type: "POST",
                 contentType: "application/json",
@@ -133,8 +147,9 @@
                 success: async function(result) {
                     cartData.push(result)
                     cartData.forEach(element => {
-                        $("#cart").find('tbody').append(`<tr><td>${element.category}</td><td>${element.modelNumber}</td><td>${element.company}</td><td>${element.customerPrice}</td></tr>`)
-                        cartTotal = cartTotal + element.customerPrice
+                        $("#cart").find('tbody').append(`<tr><td>${element.category}</td><td>${element.modelNumber}</td><td>${element.company}</td><td>${(role == "customer") ? element.customerPrice : element.dealerPrice}</td></tr>`)
+                        let price = (role == "customer") ? element.customerPrice : element.dealerPrice
+                        cartTotal = cartTotal + price
                     });
                     // $('#cart').dataTable()
                     $('#cartTotal').append(`Total = ${cartTotal}`)
