@@ -9,7 +9,7 @@ fastify.register(db)
 fastify.register(require('fastify-cors'), {
     origin: true
 })
-fastify.get('/users', async(request, reply) => {
+fastify.get('/', async(request, reply) => {
     res.send({ "hell": "is here" })
 });
 //database connection
