@@ -1,8 +1,13 @@
 const boom = require('boom')
+const knex = require('./../knex');
 const productMaster = require('./../models/productMaster')
 const userMaster = require('../models/userMaster')
 async function routes(fastify, options) {
-    /*get all Master Record Routes*/
+    fastify.post(`/addOrganization1`, (req, res) => {
+            console.log(req.body);
+            res.send(req.body)
+        })
+        /*get all Master Record Routes*/
     fastify.get('/products', async(request, reply) => {
         //return newpost
         try {
