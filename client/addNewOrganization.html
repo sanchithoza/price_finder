@@ -120,19 +120,14 @@
                     "password": $("#password").val()
                 }
                 try {
-                    $.ajax({
-                        type: "POST",
-                        dataType: "application/json",
-                        url: `${url}/master/addOrganization1`,
-                        data: organization_data,
-                        success: async function(data) {
-                            console.log(data);
-                        },
-                        error: function(e) {
-                            alert(`Add user Ajex Error : ${e.responseText}`)
-                            console.log("Add user Ajax ERROR: ", e);
-                        }
-                    });
+                    let result =
+                        $.ajax({
+                            type: "POST",
+                            dataType: "application/json",
+                            url: `${url}/organization/addOrganization`,
+                            data: organization_data,
+                        });
+                    alert(result.responseText);
                 } catch (error) {
                     console.log("Add User Error ", error);
                 }

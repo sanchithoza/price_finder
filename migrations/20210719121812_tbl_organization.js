@@ -1,8 +1,8 @@
 exports.up = function(knex) {
     return knex.schema.createTable('tbl_organization', (table) => {
         table.increments('id').primary()
-        table.string('name').notNullable()
-        table.string('alias')
+        table.string('name').unique().notNullable()
+        table.string('alias').unique()
         table.string('address')
         table.string('city')
         table.string('state')
@@ -16,7 +16,7 @@ exports.up = function(knex) {
         table.string('bank_account_number')
         table.string('ifsc_code')
         table.boolean('is_active').defaultTo(1)
-        table.timestamp('created_at').defaultTo(knex.fn.now());
+        table.timestamp('created_at').defaultTo(knex.fn.now())
     }).then(() => {
         console.log(`tbl_organization created successfully . .`);
     }).catch((error) => {
