@@ -4,6 +4,13 @@ const knex = require('./../knex');
 async function routes(fastify, options) {
     fastify.post(`/addOrganization`, async(req, res) => {
         try {
+            let org = await knex.select().table('tbl_organization').where({ "name": req.body.name }).then((result) => {
+                return (result.length > 0) ? result : { alert: `Unable to find Record with Given Search Critarea(filter) from ${table} Table.` };
+            });
+            console.log(org)
+            if (org.length > 0) {
+                throw "organization already exists"
+            }
             let organization_data = {
                 "name": req.body.name,
                 "email": req.body.email,

@@ -119,21 +119,26 @@
                     "role": "admin",
                     "password": $("#password").val()
                 }
-                try {
-                    let result =
-                        $.ajax({
-                            type: "POST",
-                            dataType: "application/json",
-                            url: `${url}/organization/addOrganization`,
-                            data: organization_data,
-                        });
-                    alert(result.responseText);
-                } catch (error) {
-                    console.log("Add User Error ", error);
-                }
+
+                $.ajax({
+                    type: "POST",
+                    dataType: "application/json",
+                    url: `${url}/organization/addOrganization`,
+                    data: organization_data,
+                    success: async function(data) {
+                        alert("Organization Added Successfully !!");
+                        $.get(`${url}/ui`)
+                    },
+                    error: function(error) {
+                        let errorMessage = JSON.parse(error.responseText);
+                        console.log("Add Organization Error : ", errorMessage.message.sqlMessage);
+                        alert(`error : ${errorMessage.message.code}`)
+                    }
+                });
+
+
 
             })
-
         })
     </script>
 </body>
