@@ -57,8 +57,8 @@
                 <hr />
                 <form>
                     <div class="form-group">
-                        <label for="email">Email address</label>
-                        <input type="email" class="form-control" id="email" placeholder="Email">
+                        <label for="email">User Name</label>
+                        <input type="text" class="form-control" id="user_name" placeholder="User Name">
                     </div>
                     <div class="form-group">
                         <label for="password">Password</label>
@@ -77,24 +77,26 @@
             let url = "http://localhost:9000"
             $("#login").click(() => {
                 let loginCredential = {
-                    "email": $("#email").val(),
+                    "user_name": $("#user_name").val(),
                     "password": $("#password").val()
                 }
+                console.log(loginCredential);
                 try {
                     $.ajax({
                         type: "POST",
-                        contentType: "application/json",
-                        url: `${url}/login`,
-                        data: JSON.stringify(loginCredential),
+                        dataType: "application/json",
+                        url: `${url}/user/login`,
+                        data: loginCredential,
                         dataType: 'json',
                         success: async function(data) {
-                            sessionStorage.setItem("user_id", data[0]._id);
-                            sessionStorage.setItem("fullName", data[0].fullName);
+                            sessionStorage.setItem("user_id", data[0].id);
+                            sessionStorage.setItem("organization_id", data[0].organization_id);
                             sessionStorage.setItem("role", data[0].role);
-                            window.location.replace("./home.html")
+                            sessionStorage.setItem("access", data[0].access);
+                            window.location.replace(`${url}/ui/home`)
                         },
                         error: function(e) {
-                            alert(`Add user Ajex Error : ${e.responseText}`)
+                            alert(e.responseText)
                             console.log("Add user Ajax ERROR: ", e);
                         }
                     });

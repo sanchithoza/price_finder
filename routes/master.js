@@ -212,24 +212,7 @@ async function routes(fastify, options) {
 
 
     //user login
-    fastify.post('/login', async(request, reply) => {
-        try {
-            await userMaster.find(request.body).exec(async(err, result) => {
-                console.log(result);
-                if (err) {
-                    return reply.send(`Error reading ${err}`)
-                }
-                if (result.length != 0) {
-                    console.log(result);
-                    return reply.send(result)
-                } else {
-                    console.log("no user found");
-                }
-            });
-        } catch (err) {
-            throw boom.boomify(err)
-        }
-    })
+
 
 
 }

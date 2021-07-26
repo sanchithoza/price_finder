@@ -116,7 +116,6 @@
                     "email": $("#email").val(),
                     "mobile": $("#mobile").val(),
                     "user_name": $("#user_name").val(),
-                    "role": "admin",
                     "password": $("#password").val()
                 }
 
@@ -127,12 +126,11 @@
                     data: organization_data,
                     success: async function(data) {
                         alert("Organization Added Successfully !!");
-                        $.get(`${url}/ui`)
+                        window.location.replace(`${url}/ui`)
                     },
                     error: function(error) {
-                        let errorMessage = JSON.parse(error.responseText);
-                        console.log("Add Organization Error : ", errorMessage.message.sqlMessage);
-                        alert(`error : ${errorMessage.message.code}`)
+                        console.log(error);
+                        alert(error.responseText)
                     }
                 });
 
