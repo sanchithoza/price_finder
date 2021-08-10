@@ -9,21 +9,19 @@ async function routes(fastify, options) {
         })
         /*get all Master Record Routes*/
     fastify.get('/products', async(request, reply) => {
+        console.log(request.body);
         //return newpost
-        try {
-            await productMaster.find().exec((err, result) => {
-                if (err) {
-                    return reply.send(`Error reading ${err}`)
-                }
-                //  let response = [];
-                //response.push(result)
-                reply.send(result)
-
-            });
-
-        } catch (err) {
-            throw boom.boomify(err)
-        }
+        knex.select().table('tbl_products').then((result) => {
+            console.log(result);
+            if (result.length) {
+                reply.status(200).send(result);
+            } else {
+                reply.status(200).send({ "result": "No Record Available" })
+            }
+        }).catch((error) => {
+            console.log(error);
+            reply.status(400).send(error);
+        })
     })
     fastify.get('/users', async(request, reply) => {
             //return newpost

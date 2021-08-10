@@ -3,6 +3,7 @@ if (sessionStorage.length <= 0) {
     alert("only registered users can access.")
     window.location.href = "index.html"
 }
+let url = "http://localhost:9000";
 $("#userName").html(sessionStorage.getItem("fullName"));
 //==================================
 //==Ui Elements like modal and menu==>
@@ -36,13 +37,16 @@ let userDropDown = '<li class="nav-item dropdown">' +
     '</li>' +
     '</ul>' +
     '</div>';
+console.log(sessionStorage.getItem("role"));
 let navBar = ''
 if (sessionStorage.getItem("role") == "admin") {
+    console.log("in for admin");
     navBar = commonNav + adminNav + userDropDown;
 } else {
+    console.log("in for others");
     navBar = commonNav + userDropDown;
 }
-
+console.log(navBar);
 
 //==================================
 //==Ui Elements like modal and menu==>
