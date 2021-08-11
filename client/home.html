@@ -77,22 +77,26 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" src="http://localhost:9000/ui/header"></script>
 
-    <script type="text/javascript" src="./js/lodash.min.js"></script>
-
-    <script type="text/javascript" src="./header.js"></script>
     <script>
-        let user = sessionStorage.getItem("fullName")
+        let user = sessionStorage.getItem("user_name")
         let role = sessionStorage.getItem("role")
+            /* $.getScript("http://localhost:9000/ui/header", function(data, textStatus, jqxhr) {
+                 console.log(data); // Data returned
+                 console.log(textStatus); // Success
+                 console.log(jqxhr.status); // 200
+                 console.log("Load was performed.");
+             });*/
         $(document).ready(function() {
+
             $('#submitCart').hide();
-            setTimeout(() => {
-                console.log(navBar);
-                $('#navBar').html(navBar);
-            }, 500);
+
+            $('#navBar').html(navBar);
+
 
             $('#userName').html(user)
-            $.get(`http://localhost:9000/master/products`, async function(data) {
+            $.get(`${url}/master/products`, async function(data) {
                 productList = data;
                 var length = data.length;
                 var table = $('#productList').DataTable();
@@ -101,11 +105,11 @@
                 for (var i = 0; i < length; i++) {
                     $('#productList').dataTable().fnAddData([
                         data[i].category,
-                        data[i].subCategory,
-                        data[i].modelNumber,
-                        data[i].company,
-                        (role == "customer") ? data[i].customerPrice : data[i].dealerPrice,
-                        `<a type="button" class="btn btn-primary" href="#" onclick="addToCart('${data[i]._id}')">Add</a>`
+                        data[i].sub_category,
+                        data[i].model_numebr,
+                        data[i].company_name,
+                        (role == "customer") ? data[i].retail_price : data[i].wholesale_price,
+                        `<a type="button" class="btn btn-primary" href="#" onclick="addToCart('${data[i].id}')">Add</a>`
                     ]);
                 }
             });
@@ -123,10 +127,10 @@
         function addToCart(id) {
             let addedIds = []
             cartData.forEach(element => {
-                addedIds.push(element._id)
+                addedIds.push(element.id)
             });
-            console.log(addedIds);
-            if (!addedIds.includes(id)) {
+            console.log(addedIds, id);
+            if (!addedIds.includes(parseInt(id))) {
                 addNow(id);
             } else {
                 alert("already added !!");
@@ -140,18 +144,18 @@
             $("#cartTotal").empty()
                 //console.log(id);
             $.ajax({
-                type: "POST",
-                contentType: "application/json",
-                url: `${url}/getProductById`,
-                data: JSON.stringify({
-                    "id": id
-                }),
-                dataType: 'json',
+                type: "GET",
+                url: `${url}/master/getProductById/${id}`,
                 success: async function(result) {
-                    cartData.push(result)
+                    cartData.push(result[0])
                     cartData.forEach(element => {
-                        $("#cart").find('tbody').append(`<tr><td>${element.category}</td><td>${element.modelNumber}</td><td>${element.company}</td><td>${(role == "customer") ? element.customerPrice : element.dealerPrice}</td></tr>`)
-                        let price = (role == "customer") ? element.customerPrice : element.dealerPrice
+                        $("#cart").find('tbody').append(`<tr>
+                            <td>${element.category}</td>
+                            <td>${element.model_numebr}</td>
+                            <td>${element.company_name}</td>
+                            <td>${(role == "customer") ? element.retail_price : element.wholesale_price}</td>
+                            </tr>`)
+                        let price = (role == "customer") ? element.retail_price : element.wholesale_price
                         cartTotal = cartTotal + price
                     });
                     // $('#cart').dataTable()

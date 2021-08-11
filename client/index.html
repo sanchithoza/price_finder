@@ -90,9 +90,9 @@
                         dataType: 'json',
                         success: async function(data) {
                             sessionStorage.setItem("user_id", data[0].id);
+                            sessionStorage.setItem("user_name", data[0].user_name);
                             sessionStorage.setItem("organization_id", data[0].organization_id);
                             sessionStorage.setItem("role", data[0].role);
-                            sessionStorage.setItem("access", data[0].access);
                             window.location.replace(`${url}/ui/home`)
                         },
                         error: function(e) {

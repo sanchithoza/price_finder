@@ -5,7 +5,7 @@ exports.up = function(knex) {
         table.string('category').notNullable()
         table.string('sub_category')
         table.string('model_name')
-        table.string('model_numebr')
+        table.string('model_number')
         table.string('company_name')
         table.string('puechase_price')
         table.string('wholesale_price')

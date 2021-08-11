@@ -1,4 +1,3 @@
-console.log(sessionStorage.length);
 if (sessionStorage.length <= 0) {
     alert("only registered users can access.")
     window.location.href = "index.html"
@@ -8,7 +7,6 @@ $("#userName").html(sessionStorage.getItem("fullName"));
 //==================================
 //==Ui Elements like modal and menu==>
 //==================================
-let url = "http://localhost:9000"
 let commonNav = '<a class="navbar-brand" href="#">Price Finder</a>' +
     '<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">' +
     '<span class="navbar-toggler-icon"></span>' +
@@ -37,8 +35,9 @@ let userDropDown = '<li class="nav-item dropdown">' +
     '</li>' +
     '</ul>' +
     '</div>';
-console.log(sessionStorage.getItem("role"));
+
 let navBar = ''
+console.log(sessionStorage.getItem("role"));
 if (sessionStorage.getItem("role") == "admin") {
     console.log("in for admin");
     navBar = commonNav + adminNav + userDropDown;
@@ -46,7 +45,6 @@ if (sessionStorage.getItem("role") == "admin") {
     console.log("in for others");
     navBar = commonNav + userDropDown;
 }
-console.log(navBar);
 
 //==================================
 //==Ui Elements like modal and menu==>
@@ -56,5 +54,5 @@ console.log(navBar);
 
 async function userSignout() {
     await sessionStorage.clear()
-    window.location.href = "index.html";
+    window.location.href = `${url}/ui`;
 }

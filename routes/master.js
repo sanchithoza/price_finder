@@ -109,17 +109,18 @@ async function routes(fastify, options) {
         }
         // await reply.send(request.body.hey)
     })
-    fastify.post('/getProductById', async(request, reply) => {
-        try {
-            await productMaster.findById(request.body.id).exec((err, result) => {
-                if (err) {
-                    return reply.send(`Error reading ${err}`)
-                }
-                reply.send(result)
-            })
-        } catch (error) {
-            throw boom.boomify(err)
-        }
+    fastify.get('/getProductById/:id', async(request, reply) => {
+        knex.select().where({ "id": request.params.id }).table('tbl_products').then((result) => {
+            console.log(result);
+            if (result.length) {
+                reply.status(200).send(result);
+            } else {
+                reply.status(200).send({ "result": "No Record Available" })
+            }
+        }).catch((error) => {
+            console.log(error);
+            reply.status(400).send(error);
+        })
     })
     fastify.post('/getUserById', async(request, reply) => {
         try {

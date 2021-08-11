@@ -1,4 +1,7 @@
 async function routes(fastify, options) {
+    fastify.get('/header', function(req, reply) {
+        return reply.sendFile('header.js') // serving path.join(__dirname, 'public', 'myHtml.html') directly
+    })
     fastify.get('/', function(req, reply) {
         return reply.sendFile('index.html') // serving path.join(__dirname, 'public', 'myHtml.html') directly
     })
