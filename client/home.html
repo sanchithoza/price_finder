@@ -80,22 +80,8 @@
     <script type="text/javascript" src="http://localhost:9000/ui/header"></script>
 
     <script>
-        let user = sessionStorage.getItem("user_name")
-        let role = sessionStorage.getItem("role")
-            /* $.getScript("http://localhost:9000/ui/header", function(data, textStatus, jqxhr) {
-                 console.log(data); // Data returned
-                 console.log(textStatus); // Success
-                 console.log(jqxhr.status); // 200
-                 console.log("Load was performed.");
-             });*/
         $(document).ready(function() {
-
             $('#submitCart').hide();
-
-            $('#navBar').html(navBar);
-
-
-            $('#userName').html(user)
             $.get(`${url}/master/products`, async function(data) {
                 productList = data;
                 var length = data.length;
