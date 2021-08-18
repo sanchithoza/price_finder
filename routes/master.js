@@ -25,20 +25,16 @@ async function routes(fastify, options) {
     })
     fastify.get('/users', async(request, reply) => {
             //return newpost
-            try {
-                await userMaster.find().exec((err, result) => {
-                    if (err) {
-                        return reply.send(`Error reading ${err}`)
-                    }
-                    //  let response = [];
-                    //response.push(result)
-                    console.log(result)
-                    reply.send(result)
-                });
-
-            } catch (err) {
-                throw boom.boomify(err)
-            }
+            knex.select().table('tbl_users').then((result) => {
+                if (result.length) {
+                    reply.status(200).send(result)
+                } else {
+                    reply.status(200).send({ "result": "No Record Available" })
+                }
+            }).catch((error) => {
+                console.log(error);
+                reply.status(400).send(error);
+            })
         })
         /*insert Master Record Routes*/
     fastify.post('/addProduct', async(request, reply) => {
@@ -60,22 +56,13 @@ async function routes(fastify, options) {
         }
     })
     fastify.post('/addUser', async(request, reply) => {
-        try {
-            await userMaster.find(request.body).exec(async(err, result) => {
-                if (err) {
-                    return reply.send(`Error reading ${err}`)
-                }
-                if (result.length == 0) {
-                    let user = new userMaster(request.body);
-                    let newUser = await user.save();
-                    await reply.send(newUser)
-                } else {
-                    await reply.send("Record Already Exists .")
-                }
-            });
-        } catch (err) {
-            throw boom.boomify(err)
-        }
+        knex('tbl_users').insert(request.body).then((result) => {
+            console.log(result);
+            reply.status(200).send({ "result": "insert user success" })
+        }).catch((error) => {
+            console.log(error);
+            reply.status(400).send(error)
+        })
     })
 
     /*Get Product Where*/

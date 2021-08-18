@@ -78,8 +78,8 @@
 
     <script>
         $(document).ready(function() {
-            $.get(`${url}/products`, function(data) {
-                console.log("populating data table...");
+            $.get(`${url}/master/products`, function(data) {
+                console.log("populating data table...", data);
                 var length = data.length;
                 var table = $('#productRegister').DataTable();
 
@@ -88,13 +88,12 @@
                     $('#productRegister').dataTable().fnAddData([
                         `<a  href='addNewProduct.html?edit=${data[i]._id}'>edit</a>/<a  href='#' onclick='deleteProduct("${data[i]._id}");'>delete</a>`,
                         data[i].category,
-                        data[i].subCategory,
-                        data[i].modelNumber,
-                        data[i].company,
+                        data[i].sub_category,
+                        data[i].model_numebr,
+                        data[i].company_name,
                         data[i].discription,
-                        data[i].dealerPrice,
-                        data[i].customerPrice
-
+                        data[i].wholesale_price,
+                        data[i].retail_price
                     ]);
                 }
             });

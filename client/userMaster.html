@@ -48,16 +48,14 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <table id="userRegister" class="display">
+                        <table id="userRegister">
                             <thead>
                                 <tr>
                                     <th>edit/delete</th>
                                     <th>Role</th>
-                                    <th>Full Name</th>
+                                    <th>User Name</th>
                                     <th>Mobile Number</th>
                                     <th>Email</th>
-                                    <th>Password</th>
-
                                 </tr>
                             </thead>
                             <tbody>
@@ -76,10 +74,10 @@
 
     <script>
         $(document).ready(async function() {
-            await loadUser()
-                //----------------------------
-                //add product modal events
-                //---------------------------
+            await loadUser();
+            //----------------------------
+            //add product modal events
+            //---------------------------
             $('#addUser').click(() => {
                 window.location.href = `${url}/ui/addUser`;
             });
@@ -88,7 +86,7 @@
         function deleteProduct(id) {
             confirm("Are You Sure You Wnt to delete this ?")
             let argu = {
-                "_id": id
+                "id": id
             }
             $.ajax({
                 type: "POST",
@@ -106,25 +104,27 @@
             });
         }
 
+        function editUser(id) {
+
+        }
+
         function loadUser() {
-            $.get(`${url}/users`, function(data) {
-                console.log("populating data table...");
+            $.get(`${url}/master/users`, function(data) {
                 var length = data.length;
                 console.log(data);
                 var table = $('#userRegister').DataTable();
-
                 table.clear()
                 for (var i = 0; i < length; i++) {
                     $('#userRegister').dataTable().fnAddData([
-                        `<a  href='addNewUser.html?edit=${data[i]._id}'>edit</a>/<a  href='#' onclick='deleteProduct("${data[i]._id}");'>delete</a>`,
+                        `<a onclick='editUser("${data[i].id}");' href='#' id="editUser">edit</a>/<a  href='#' onclick='deleteProduct("${data[i].id}");'>delete</a>`,
                         data[i].role,
-                        data[i].fullName,
+                        data[i].user_name,
                         data[i].mobile,
-                        data[i].email,
-                        data[i].password
+                        data[i].email
                     ]);
                 }
             });
+
         }
     </script>
 </body>

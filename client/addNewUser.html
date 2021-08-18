@@ -28,7 +28,7 @@
                         <div class="card-header">
                             <div class="row" style="padding: 8px; ">
                                 <div class="col-md-6">
-                                    <h4>Product Master Entry</h4>
+                                    <h4>User Master Entry</h4>
                                 </div>
                             </div>
 
@@ -38,9 +38,9 @@
 
                             <div class="row">
                                 <div class="col-md-6">
-                                    <div class="col-md-4"> Full Name : </div>
+                                    <div class="col-md-4"> User Name : </div>
                                     <div class="col-md-8">
-                                        <input autocomplete="off" style="width: 100%;" name="fullName" id="fullName" class="fullName" required>
+                                        <input autocomplete="off" style="width: 100%;" name="user_name" id="user_name" class="user_name" required>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -91,40 +91,40 @@
     <script>
         $(document).ready(async function() {
             $('#addUser').click(() => {
-                let fullName = $('.fullName').val()
+                let user_name = $('.user_name').val()
                 let role = $('.role').val()
                 let mobile = $('.mobile').val()
                 let email = $('.email').val()
                 let password = $('#password').val()
-                if (!fullName || !email || !password) {
+                if (!userName || !email || !password) {
                     alert("Input Required");
                     return false;
                 }
                 let newUser = {
-                    fullName,
+                    organization_id,
+                    user_name,
                     role,
                     mobile,
                     email,
                     password
                 }
-                try {
-                    $.ajax({
-                        type: "POST",
-                        contentType: "application/json",
-                        url: `${url}/addUser`,
-                        data: JSON.stringify(newUser),
-                        dataType: 'json',
-                        success: async function(data) {
-                            window.location.replace("userMaster.html")
-                        },
-                        error: function(e) {
-                            //           alert(`Add product Ajex Error : ${e}`)
-                            console.log("Add user Ajax ERROR: ", JSON.stringify(e));
-                        }
-                    });
-                } catch (error) {
-                    console.log("Add user Button Error : " + error);
-                }
+                console.log(newUser);
+                /* try {
+                     $.ajax({
+                         type: "POST",
+                         contentType: "application/json",
+                         url: `${url}/master/addUser`,
+                         data: JSON.stringify(newUser),
+                         dataType: 'json',
+                         success: async function(data) {
+                             window.location.replace("userMaster.html")
+                         },
+                         error: function(e) {
+                             //           alert(`Add product Ajex Error : ${e}`)
+                             console.log("Add user Ajax ERROR: ", JSON.stringify(e));
+                         }
+                     });*/
+
             });
             var url_string = window.location.href
             var edit_url = new URL(url_string);

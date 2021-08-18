@@ -5,6 +5,7 @@ if (sessionStorage.length <= 0) {
 let url = "http://localhost:9000";
 let user = sessionStorage.getItem("user_name")
 let role = sessionStorage.getItem("role")
+let organization_id = sessionStorage.getItem("organization_id")
 $("#userName").html(sessionStorage.getItem("fullName"));
 //==================================
 //==Ui Elements like modal and menu==>
