@@ -82,22 +82,38 @@
     <script>
         $(document).ready(function() {
             $('#submitCart').hide();
-            $.get(`${url}/master/products`, async function(data) {
-                productList = data;
-                var length = data.length;
-                var table = $('#productList').DataTable();
+            $.ajax({
+                type: "POST",
+                dataType: "application/json",
+                url: `${url}/master/products`,
+                data: {
+                    "organization_id": sessionStorage.getItem("organization_id")
+                },
+                dataType: 'json',
+                success: async function(data) {
+                    productList = data;
+                    var length = data.length;
+                    var table = $('#productList').DataTable();
 
-                table.clear()
-                for (var i = 0; i < length; i++) {
-                    $('#productList').dataTable().fnAddData([
-                        data[i].category,
-                        data[i].sub_category,
-                        data[i].model_numebr,
-                        data[i].company_name,
-                        (role == "customer") ? data[i].retail_price : data[i].wholesale_price,
-                        `<a type="button" class="btn btn-primary" href="#" onclick="addToCart('${data[i].id}')">Add</a>`
-                    ]);
+                    table.clear()
+                    for (var i = 0; i < length; i++) {
+                        $('#productList').dataTable().fnAddData([
+                            data[i].category,
+                            data[i].sub_category,
+                            data[i].model_numebr,
+                            data[i].company_name,
+                            (role == "customer") ? data[i].retail_price : data[i].wholesale_price,
+                            `<a type="button" class="btn btn-primary" href="#" onclick="addToCart('${data[i].id}')">Add</a>`
+                        ]);
+                    }
+                },
+                error: function(e) {
+                    alert(e.responseText)
+                    console.log("Add user Ajax ERROR: ", e);
                 }
+            });
+            $.post(`${url}/master/products`, async function(data) {
+
             });
             //----------------------------
             //add product modal events

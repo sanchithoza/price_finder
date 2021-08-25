@@ -23,6 +23,21 @@ async function routes(fastify, options) {
             reply.status(400).send(error);
         })
     })
+    fastify.post('/products', async(request, reply) => {
+        console.log(request.body);
+        //return newpost
+        knex.select().table('tbl_products').where({ "organization_id": request.body.organization_id }).then((result) => {
+            console.log(result);
+            if (result.length) {
+                reply.status(200).send(result);
+            } else {
+                reply.status(200).send({ "result": "No Record Available" })
+            }
+        }).catch((error) => {
+            console.log(error);
+            reply.status(400).send(error);
+        })
+    })
     fastify.get('/users', async(request, reply) => {
             //return newpost
             knex.select().table('tbl_users').then((result) => {
@@ -38,22 +53,13 @@ async function routes(fastify, options) {
         })
         /*insert Master Record Routes*/
     fastify.post('/addProduct', async(request, reply) => {
-        try {
-            await productMaster.find(request.body).exec(async(err, result) => {
-                if (err) {
-                    return reply.send(`Error reading ${err}`)
-                }
-                if (result.length == 0) {
-                    let product = new productMaster(request.body);
-                    let newProduct = await product.save();
-                    await reply.send(newProduct)
-                } else {
-                    await reply.send("Record Already Exists .")
-                }
-            });
-        } catch (err) {
-            throw boom.boomify(err)
-        }
+        knex.table('tbl_products').insert(request.body).then((result) => {
+            console.log(result);
+            reply.status(200).send({ "result": "insert user success" })
+        }).catch((error) => {
+            console.log(error);
+            reply.status(400).send(error)
+        })
     })
     fastify.post('/addUser', async(request, reply) => {
         knex('tbl_users').insert(request.body).then((result) => {

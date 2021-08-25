@@ -103,44 +103,42 @@
     <script>
         $(document).ready(async function() {
             $('#addProduct').click(() => {
-                let company = $('.company').val()
+                let organization_id = sessionStorage.getItem("organization_id")
+                let company_name = $('.company').val()
                 let category = $('.category').val()
-                let subCategory = $('.subCategory').val()
-                let modelNumber = $('.modelNumber').val()
+                let sub_category = $('.subCategory').val()
+                let model_number = $('.modelNumber').val()
                 let discription = $('#discription').val()
-                let dealerPrice = $('#dealerPrice').val()
-                let customerPrice = $('#customerPrice').val()
+                let wholesale_price = $('#dealerPrice').val()
+                let retail_price = $('#customerPrice').val()
                 if (!category || !dealerPrice || !customerPrice) {
                     alert("Input Required");
                     return false;
                 }
                 let newProduct = {
-                    company,
+                    organization_id,
+                    company_name,
                     category,
-                    subCategory,
-                    modelNumber,
+                    sub_category,
+                    model_number,
                     discription,
-                    dealerPrice,
-                    customerPrice
+                    wholesale_price,
+                    retail_price
                 }
-                try {
-                    $.ajax({
-                        type: "POST",
-                        contentType: "application/json",
-                        url: `${url}/addProduct`,
-                        data: JSON.stringify(newProduct),
-                        dataType: 'json',
-                        success: async function(data) {
-                            window.location.replace("productMaster.html")
-                        },
-                        error: function(e) {
-                            //           alert(`Add product Ajex Error : ${e}`)
-                            console.log("Add product Ajax ERROR: ", JSON.stringify(e));
-                        }
-                    });
-                } catch (error) {
-                    console.log("Add Product Button Error : " + error);
-                }
+                $.ajax({
+                    type: "POST",
+                    contentType: "application/json",
+                    url: `${url}/addProduct`,
+                    data: JSON.stringify(newProduct),
+                    dataType: 'json',
+                    success: async function(data) {
+                        window.location.href = `${url}/ui/productMaster`
+                    },
+                    error: function(e) {
+                        //           alert(`Add product Ajex Error : ${e}`)
+                        console.log("Add product Ajax ERROR: ", JSON.stringify(e));
+                    }
+                });
             });
             var url_string = window.location.href
             var edit_url = new URL(url_string);
