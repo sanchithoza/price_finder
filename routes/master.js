@@ -71,36 +71,9 @@ async function routes(fastify, options) {
         })
     })
 
-    /*Get Product Where*/
-    fastify.post('/getProductWhere', async(request, reply) => {
-        try {
-            //  console.log(`req${JSON.stringify(request.body)}`);
-            await productMaster.find(request.body).exec((err, result) => {
-                if (err) {
-                    return reply.send(`Error reading ${err}`)
-                }
-                reply.send(result)
-            });
 
-        } catch (err) {
-            throw boom.boomify(err)
-        }
-        // await reply.send(request.body.hey)
-    })
     fastify.post('/getUserWhere', async(request, reply) => {
-        try {
-            //  console.log(`req${JSON.stringify(request.body)}`);
-            await userMaster.find(request.body).exec((err, result) => {
-                if (err) {
-                    return reply.send(`Error reading ${err}`)
-                }
-                reply.send(result)
-            });
 
-        } catch (err) {
-            throw boom.boomify(err)
-        }
-        // await reply.send(request.body.hey)
     })
     fastify.get('/getProductById/:id', async(request, reply) => {
         knex.select().where({ "id": request.params.id }).table('tbl_products').then((result) => {
@@ -129,31 +102,17 @@ async function routes(fastify, options) {
     })
 
     fastify.post('/deleteProduct', async(request, reply) => {
-        try {
-            await productMaster.deleteOne(request.body).exec((err, result) => {
-                if (err) {
-                    return reply.send(`Error reading ${err}`)
-                }
-
-                // console.log(result);
-                reply.send(result)
-            });
-        } catch (error) {
-            throw boom.boomify(err)
-        }
+        console.log(request.body);
+        knex.del().where({ "id": request.body.id }).table("tbl_products").then((result) => {
+            console.log(result);
+            reply.status(200).send(result)
+        }).catch((error) => {
+            console.log(error);
+            reply.status(200).send(error)
+        })
     })
     fastify.post('/deleteUser', async(request, reply) => {
-        try {
-            await userMaster.deleteOne(request.body).exec((err, result) => {
-                if (err) {
-                    return reply.send(`Error reading ${err}`)
-                }
-                // console.log(result);
-                reply.send(result)
-            });
-        } catch (error) {
-            throw boom.boomify(err)
-        }
+
     })
 
     fastify.post('/updateProduct', async(request, reply) => {

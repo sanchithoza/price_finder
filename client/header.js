@@ -3,9 +3,9 @@ if (sessionStorage.length <= 0) {
     window.location.href = "index.html"
 }
 let url = "http://localhost:9000";
-let user = sessionStorage.getItem("user_name")
-let role = sessionStorage.getItem("role")
-let organization_id = sessionStorage.getItem("organization_id")
+let user = sessionStorage.getItem("user_name").trim()
+let role = sessionStorage.getItem("role").trim()
+let organization_id = sessionStorage.getItem("organization_id").trim()
 $("#userName").html(sessionStorage.getItem("fullName"));
 //==================================
 //==Ui Elements like modal and menu==>
@@ -39,11 +39,9 @@ let userDropDown = `<li class="nav-item dropdown">
     </div>`;
 
 let navBar = ''
-console.log(sessionStorage.getItem("role"));
-if (sessionStorage.getItem("role") == "admin") {
+if (role == "admin") {
     console.log("in for admin");
     navBar = commonNav + adminNav + userDropDown;
-
 } else {
     console.log("in for others");
     navBar = commonNav + userDropDown;

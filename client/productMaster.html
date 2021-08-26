@@ -49,7 +49,7 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <table id="productRegister" class="display">
+                        <table id="productRegister" class="table table-responsive display">
                             <thead>
                                 <tr>
                                     <th>edit/delete</th>
@@ -78,53 +78,73 @@
 
     <script>
         $(document).ready(function() {
-            $.get(`${url}/master/products`, function(data) {
-                console.log("populating data table...", data);
-                var length = data.length;
-                var table = $('#productRegister').DataTable();
-
-                table.clear()
-                for (var i = 0; i < length; i++) {
-                    $('#productRegister').dataTable().fnAddData([
-                        `<a  href='addNewProduct.html?edit=${data[i]._id}'>edit</a>/<a  href='#' onclick='deleteProduct("${data[i]._id}");'>delete</a>`,
-                        data[i].category,
-                        data[i].sub_category,
-                        data[i].model_numebr,
-                        data[i].company_name,
-                        data[i].discription,
-                        data[i].wholesale_price,
-                        data[i].retail_price
-                    ]);
-                }
-            });
-            //----------------------------
-            //add product modal events
-            //---------------------------
+            $.ajax({
+                    type: "POST",
+                    dataType: "application/json",
+                    url: `${url}/master/products`,
+                    data: {
+                        "organization_id": sessionStorage.getItem("organization_id")
+                    },
+                    dataType: 'json',
+                    success: async function(data) {
+                        console.log("populating data table...", data);
+                        var length = data.length;
+                        var table = $('#productRegister').DataTable();
+                        table.clear()
+                        for (var i = 0; i < length; i++) {
+                            $('#productRegister').dataTable().fnAddData([
+                                `<a href="#" onclick='editProduct("${data[i].id}")'>edit</a>/<a  href='#' onclick='deleteProduct("${data[i].id}");'>delete</a>`,
+                                data[i].category,
+                                data[i].sub_category,
+                                data[i].model_number,
+                                data[i].company_name,
+                                data[i].discription,
+                                data[i].wholesale_price,
+                                data[i].retail_price
+                            ]);
+                        }
+                    },
+                    error: function(e) {
+                        alert(e.responseText)
+                        console.log("Add user Ajax ERROR: ", e);
+                    }
+                })
+                //----------------------------
+                //add product modal events
+                //---------------------------
 
             $('#addProduct').click(() => {
                 window.location.href = `${url}/ui/addProduct`;
             });
         });
 
+        function editProduct(id) {
+            window.location.href = `${url}/ui/editProduct/${id}`
+        }
+
         function deleteProduct(id) {
-            confirm("Are You Sure You Wnt to delete this ?")
-            let argu = {
-                "_id": id
-            }
-            $.ajax({
-                type: "POST",
-                contentType: "application/json",
-                url: `${url}/deleteProduct`,
-                data: JSON.stringify(argu),
-                dataType: 'json',
-                success: async function(data) {
-                    await loadTables()
-                },
-                error: function(e) {
-                    alert("Error!")
-                    console.log("ERROR: ", e);
+            if (confirm("Are You Sure You Want to delete this ?")) {
+                let argu = {
+                    "id": id
                 }
-            });
+                $.ajax({
+                    type: "POST",
+                    contentType: "application/json",
+                    url: `${url}/master/deleteProduct`,
+                    data: JSON.stringify(argu),
+                    dataType: 'json',
+                    success: async function(data) {
+                        await window.location.reload()
+                    },
+                    error: function(e) {
+                        alert("Error!")
+                        console.log("ERROR: ", e);
+                    }
+                });
+            } else {
+
+            }
+
         }
 
 
