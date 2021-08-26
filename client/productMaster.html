@@ -119,7 +119,8 @@
         });
 
         function editProduct(id) {
-            window.location.href = `${url}/ui/editProduct/${id}`
+            localStorage.setItem("edit_product", id)
+            window.location.href = `${url}/ui/addProduct`
         }
 
         function deleteProduct(id) {

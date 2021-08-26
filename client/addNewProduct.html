@@ -140,9 +140,12 @@
                     }
                 });
             });
-            var url_string = window.location.href
-            var edit_url = new URL(url_string);
-            var editid = edit_url.searchParams.get("edit");
+            if (localStorage.getItem("edit_product")) {
+                var editid = localStorage.getItem("edit_product")
+                console.log(editid);
+                localStorage.clear()
+            }
+
 
             if (editid) {
                 console.log("editing data");
@@ -153,23 +156,22 @@
                         "_id": editid
                     }
                     $.ajax({
-                        type: "POST",
+                        type: "GET",
                         contentType: "application/json",
-                        url: `${url}/getProductWhere`,
+                        url: `${url}/master/getProductById/${editid}`,
                         data: JSON.stringify(argu),
                         dataType: 'json',
                         success: async function(data) {
                             console.log("edit funtion " + JSON.stringify(data));
                             data.forEach(element => {
-                                $("#company").val(element.company)
+                                $("#company").val(element.company_name)
                                 $("#category").val(element.category)
-                                $("#subCategory").val(element.subCategory)
-                                $("#modelNumber").val(element.modelNumber)
+                                $("#subCategory").val(element.sub_category)
+                                $("#modelNumber").val(element.model_number)
                                 $("#discription").val(element.discription)
-                                $("#dealerPrice").val(element.dealerPrice)
-                                $("#customerPrice").val(element.customerPrice)
-                                $("#uid").val(element._id)
-
+                                $("#dealerPrice").val(element.wholesale_price)
+                                $("#customerPrice").val(element.retail_price)
+                                $("#uid").val(element.id)
                             });
 
                         },
@@ -182,40 +184,38 @@
                 }
             }
             $('#updateProduct').click(() => {
-                let _id = $("#uid").val()
-                let company = $('.company').val()
+                let id = $("#uid").val()
+                let company_name = $('.company').val()
                 let category = $('.category').val()
-                let subCategory = $('.subCategory').val()
-                let modelNumber = $('.modelNumber').val()
+                let sub_category = $('.subCategory').val()
+                let model_number = $('.modelNumber').val()
                 let discription = $('#discription').val()
-                let dealerPrice = $('#dealerPrice').val()
-                let customerPrice = $('#customerPrice').val()
+                let wholesale_price = $('#dealerPrice').val()
+                let retail_price = $('#customerPrice').val()
                 if (!category) {
                     alert("Input Required");
                     return false;
                 }
                 let updateProduct = {
-                    _id,
-                    company,
+                    company_name,
                     category,
-                    subCategory,
-                    modelNumber,
+                    sub_category,
+                    model_number,
                     discription,
-                    dealerPrice,
-                    customerPrice
+                    wholesale_price,
+                    retail_price
                 }
                 console.log(updateProduct);
                 try {
                     $.ajax({
-                        type: "POST",
+                        type: "PATCH",
                         contentType: "application/json",
-                        url: `${url}/updateProduct`,
+                        url: `${url}/master/updateProduct/${id}`,
                         data: JSON.stringify(updateProduct),
                         dataType: 'json',
                         success: async function(data) {
-
-                            window.location.replace("productMaster.html")
                             console.log(data);
+                            window.location.href = `${url}/ui/productMaster`
                         },
                         error: function(e) {
                             alert(`update product Ajex Error : ${e.responseText}`)

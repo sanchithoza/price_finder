@@ -108,35 +108,21 @@ async function routes(fastify, options) {
             reply.status(200).send(result)
         }).catch((error) => {
             console.log(error);
-            reply.status(200).send(error)
+            reply.status(400).send(error)
         })
     })
     fastify.post('/deleteUser', async(request, reply) => {
 
     })
 
-    fastify.post('/updateProduct', async(request, reply) => {
-        try {
-            data = request.body
-            console.log(request.body);
-            let doc = await productMaster.findOneAndUpdate({ "_id": data._id }, //filter
-                {
-                    "company": data.company,
-                    "category": data.category,
-                    "subCategory": data.subCategory,
-                    "modelNumber": data.modelNumber,
-                    "discription": data.discription,
-                    "dealerPrice": data.dealerPrice,
-                    "customerPrice": data.customerPrice
-                }, // fields to update 
-                {
-                    new: true
-                });
-            reply.send(doc)
-
-        } catch (err) {
-            throw boom.boomify(err)
-        }
+    fastify.patch('/updateProduct/:id', async(request, reply) => {
+        knex.update(request.body).table('tbl_products').where({ "id": request.param.id }).then((result) => {
+            console.log(result);
+            reply.status(200).send(result)
+        }).catch((error) => {
+            console.log(error);
+            reply.status(400).send({ "error": error })
+        })
     })
     fastify.post('/updateUser', async(request, reply) => {
         try {
