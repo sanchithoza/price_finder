@@ -39,8 +39,21 @@ async function routes(fastify, options) {
         })
     })
     fastify.get('/users', async(request, reply) => {
+        //return newpost
+        knex.select().table('tbl_users').then((result) => {
+            if (result.length) {
+                reply.status(200).send(result)
+            } else {
+                reply.status(200).send({ "result": "No Record Available" })
+            }
+        }).catch((error) => {
+            console.log(error);
+            reply.status(400).send(error);
+        })
+    })
+    fastify.get('/users/:orgId', async(request, reply) => {
             //return newpost
-            knex.select().table('tbl_users').then((result) => {
+            knex.select().table('tbl_users').where({ "organization_id": request.params.orgId }).then((result) => {
                 if (result.length) {
                     reply.status(200).send(result)
                 } else {
@@ -116,7 +129,9 @@ async function routes(fastify, options) {
     })
 
     fastify.patch('/updateProduct/:id', async(request, reply) => {
-        knex.update(request.body).table('tbl_products').where({ "id": request.param.id }).then((result) => {
+        console.log(request.body);
+        console.log(request.params);
+        knex.update(request.body).table('tbl_products').where({ "id": request.params.id }).then((result) => {
             console.log(result);
             reply.status(200).send(result)
         }).catch((error) => {

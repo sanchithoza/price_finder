@@ -54,19 +54,19 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="col-md-4"> Mobile Number : </div>
+                                    <div class="col-md-4">Mobile Number</div>
                                     <div class="col-md-8">
                                         <input autocomplete="off" style="width: 100%;" name="mobile" id="mobile" class="mobile" required>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="col-md-4"> E-mail Id :</div>
+                                    <div class="col-md-4">E-mail Id</div>
                                     <div class="col-md-8">
                                         <input autocomplete="off" type="email" style="width: 100%;" name="email" id="email" class="email">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="col-md-4"> Password </div>
+                                    <div class="col-md-4">Password</div>
                                     <div class="col-md-8">
                                         <input type="text" autocomplete="off" style="width: 100%;" name="password" id="password" required/>
                                     </div>
@@ -109,21 +109,22 @@
                     password
                 }
                 console.log(newUser);
-                /* try {
-                     $.ajax({
-                         type: "POST",
-                         contentType: "application/json",
-                         url: `${url}/master/addUser`,
-                         data: JSON.stringify(newUser),
-                         dataType: 'json',
-                         success: async function(data) {
-                             window.location.replace("userMaster.html")
-                         },
-                         error: function(e) {
-                             //           alert(`Add product Ajex Error : ${e}`)
-                             console.log("Add user Ajax ERROR: ", JSON.stringify(e));
-                         }
-                     });*/
+
+                $.ajax({
+                    type: "POST",
+                    contentType: "application/json",
+                    url: `${url}/master/addUser`,
+                    data: JSON.stringify(newUser),
+                    dataType: 'json',
+                    success: async function(data) {
+                        console.log(data);
+                        window.location.href = `${url}/ui/userMaster`
+                    },
+                    error: function(e) {
+                        //           alert(`Add product Ajex Error : ${e}`)
+                        console.log("Add user Ajax ERROR: ", JSON.stringify(e));
+                    }
+                });
 
             });
             var url_string = window.location.href

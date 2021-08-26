@@ -74,7 +74,22 @@
 
     <script>
         $(document).ready(async function() {
-            await loadUser();
+            let organization_id = sessionStorage.getItem("organization_id")
+            $.get(`${url}/master/users/${organization_id}`, function(data) {
+                var length = data.length;
+                console.log(data);
+                var table = $('#userRegister').DataTable();
+                table.clear()
+                for (var i = 0; i < length; i++) {
+                    $('#userRegister').dataTable().fnAddData([
+                        `<a onclick='editUser("${data[i].id}");' href='#' id="editUser">edit</a>/<a  href='#' onclick='deleteProduct("${data[i].id}");'>delete</a>`,
+                        data[i].role,
+                        data[i].user_name,
+                        data[i].mobile,
+                        data[i].email
+                    ]);
+                }
+            });
             //----------------------------
             //add product modal events
             //---------------------------
