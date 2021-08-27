@@ -1,8 +1,12 @@
-if (sessionStorage.length <= 0) {
-    alert("only registered users can access.")
-    window.location.href = "index.html"
-}
 let url = "http://localhost:9000";
+if (sessionStorage.length <= 0) {
+    window.location.href = `${url}/ui`
+    if (alert("only registered users can access this.")) {
+        console.log("here");
+
+    }
+}
+
 let user = sessionStorage.getItem("user_name").trim()
 let role = sessionStorage.getItem("role").trim()
 let organization_id = sessionStorage.getItem("organization_id").trim()

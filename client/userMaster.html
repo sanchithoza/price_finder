@@ -82,7 +82,7 @@
                 table.clear()
                 for (var i = 0; i < length; i++) {
                     $('#userRegister').dataTable().fnAddData([
-                        `<a onclick='editUser("${data[i].id}");' href='#' id="editUser">edit</a>/<a  href='#' onclick='deleteProduct("${data[i].id}");'>delete</a>`,
+                        `<a onclick='editUser("${data[i].id}");' href='#' id="editUser">edit</a>/<a  href='#' onclick='deleteUser("${data[i].id}");'>delete</a>`,
                         data[i].role,
                         data[i].user_name,
                         data[i].mobile,
@@ -98,48 +98,28 @@
             });
         });
 
-        function deleteProduct(id) {
-            confirm("Are You Sure You Wnt to delete this ?")
-            let argu = {
-                "id": id
+        function deleteUser(id) {
+            if (confirm("Are You Sure You Wnt to delete this ?")) {
+
+                $.ajax({
+                    type: "DELETE",
+                    contentType: "application/json",
+                    url: `${url}/master/deleteUser/${id}`,
+                    dataType: 'json',
+                    success: async function(data) {
+                        window.location.href = `${url}/ui/userMaster`
+                    },
+                    error: function(e) {
+                        alert("Error!")
+                        console.log("ERROR: ", e);
+                    }
+                });
             }
-            $.ajax({
-                type: "POST",
-                contentType: "application/json",
-                url: `${url}/deleteUser`,
-                data: JSON.stringify(argu),
-                dataType: 'json',
-                success: async function(data) {
-                    await loadUser()
-                },
-                error: function(e) {
-                    alert("Error!")
-                    console.log("ERROR: ", e);
-                }
-            });
         }
 
         function editUser(id) {
-
-        }
-
-        function loadUser() {
-            $.get(`${url}/master/users`, function(data) {
-                var length = data.length;
-                console.log(data);
-                var table = $('#userRegister').DataTable();
-                table.clear()
-                for (var i = 0; i < length; i++) {
-                    $('#userRegister').dataTable().fnAddData([
-                        `<a onclick='editUser("${data[i].id}");' href='#' id="editUser">edit</a>/<a  href='#' onclick='deleteProduct("${data[i].id}");'>delete</a>`,
-                        data[i].role,
-                        data[i].user_name,
-                        data[i].mobile,
-                        data[i].email
-                    ]);
-                }
-            });
-
+            localStorage.setItem("edit_user", id)
+            window.location.href = `${url}/ui/addUser`
         }
     </script>
 </body>

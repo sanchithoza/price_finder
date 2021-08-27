@@ -90,6 +90,7 @@
 
     <script>
         $(document).ready(async function() {
+
             $('#addUser').click(() => {
                 let user_name = $('.user_name').val()
                 let role = $('.role').val()
@@ -127,33 +128,30 @@
                 });
 
             });
-            var url_string = window.location.href
-            var edit_url = new URL(url_string);
-            var editid = edit_url.searchParams.get("edit");
-
+            if (localStorage.getItem("edit_user")) {
+                var editid = localStorage.getItem("edit_user")
+                console.log(editid);
+                localStorage.clear()
+            }
             if (editid) {
                 console.log("editing data");
                 try {
                     $("#addUser").hide();
                     $("#updateUser").removeAttr('hidden');
-                    let argu = {
-                        "_id": editid
-                    }
                     $.ajax({
-                        type: "POST",
+                        type: "GET",
                         contentType: "application/json",
-                        url: `${url}/getUserWhere`,
-                        data: JSON.stringify(argu),
+                        url: `${url}/master/getUser/${editid}`,
                         dataType: 'json',
                         success: async function(data) {
                             console.log("edit funtion " + JSON.stringify(data));
                             data.forEach(element => {
-                                $("#fullName").val(element.fullName)
+                                $("#user_name").val(element.user_name)
                                 $("#role").val(element.role)
                                 $("#mobile").val(element.mobile)
                                 $("#email").val(element.email)
                                 $("#password").val(element.password)
-                                $("#uid").val(element._id)
+                                $("#uid").val(element.id)
                             });
 
                         },
@@ -166,19 +164,18 @@
                 }
             }
             $('#updateUser').click(() => {
-                let _id = $("#uid").val()
-                let fullName = $('.fullName').val()
+                let id = $("#uid").val()
+                let user_name = $('.user_name').val()
                 let role = $('.role').val()
                 let mobile = $('.mobile').val()
                 let email = $('.email').val()
                 let password = $('#password').val()
-                if (!fullName || !email || !password) {
+                if (!user_name || !email || !password) {
                     alert("Input Required");
                     return false;
                 }
                 let updateUser = {
-                    _id,
-                    fullName,
+                    user_name,
                     role,
                     mobile,
                     email,
@@ -187,15 +184,14 @@
                 console.log(updateUser);
                 try {
                     $.ajax({
-                        type: "POST",
+                        type: "PATCH",
                         contentType: "application/json",
-                        url: `${url}/updateUser`,
+                        url: `${url}/master/updateUser/${id}`,
                         data: JSON.stringify(updateUser),
                         dataType: 'json',
                         success: async function(data) {
                             console.log(data);
-                            window.location.replace("userMaster.html")
-
+                            window.location.href = `${url}/ui/userMaster`
                         },
                         error: function(e) {
                             alert(`update user Ajex Error : ${e.responseText}`)

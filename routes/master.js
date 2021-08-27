@@ -51,6 +51,19 @@ async function routes(fastify, options) {
             reply.status(400).send(error);
         })
     })
+    fastify.get('/getUser/:id', async(request, reply) => {
+        knex.select().table('tbl_users').where({ "id": request.params.id }).then((result) => {
+            if (result.length) {
+                console.log(result);
+                reply.status(200).send(result)
+            } else {
+                reply.status(200).send({ "result": "No Record Available" })
+            }
+        }).catch((error) => {
+            console.log(error);
+            reply.status(400).send(error);
+        })
+    })
     fastify.get('/users/:orgId', async(request, reply) => {
             //return newpost
             knex.select().table('tbl_users').where({ "organization_id": request.params.orgId }).then((result) => {
@@ -124,8 +137,14 @@ async function routes(fastify, options) {
             reply.status(400).send(error)
         })
     })
-    fastify.post('/deleteUser', async(request, reply) => {
-
+    fastify.delete('/deleteUser/:id', async(request, reply) => {
+        knex.del().where({ "id": request.params.id }).table("tbl_users").then((result) => {
+            console.log(result);
+            reply.status(200).send(result)
+        }).catch((error) => {
+            console.log(error);
+            reply.status(400).send(error)
+        })
     })
 
     fastify.patch('/updateProduct/:id', async(request, reply) => {
@@ -139,27 +158,14 @@ async function routes(fastify, options) {
             reply.status(400).send({ "error": error })
         })
     })
-    fastify.post('/updateUser', async(request, reply) => {
-        try {
-            data = request.body
-            console.log(request.body);
-            let doc = await userMaster.findOneAndUpdate({ "_id": data._id }, //filter
-                {
-                    "fullName": data.fullName,
-                    "role": data.role,
-                    "mobile": data.mobile,
-                    "email": data.email,
-                    "password": data.password,
-                }, // fields to update 
-                {
-                    new: true
-                });
-
-            reply.send(doc)
-
-        } catch (err) {
-            throw boom.boomify(err)
-        }
+    fastify.patch('/updateUser/:id', async(request, reply) => {
+        knex.update(request.body).table('tbl_users').where({ "id": request.params.id }).then((result) => {
+            console.log(result);
+            reply.status(200).send(result)
+        }).catch((error) => {
+            console.log(error);
+            reply.status(400).send({ "error": error })
+        })
     })
 
 
