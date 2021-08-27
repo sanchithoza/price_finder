@@ -20,6 +20,9 @@ async function routes(fastify, options) {
     fastify.get('/createQuotation', function(req, reply) {
         return reply.sendFile('createQuotation.html') // serving path.join(__dirname, 'public', 'myHtml.html') directly
     })
+    fastify.get('/printableQuotation', function(req, reply) {
+        return reply.sendFile('printableQuotation.html') // serving path.join(__dirname, 'public', 'myHtml.html') directly
+    })
     fastify.get('/productMaster', function(req, reply) {
         return reply.sendFile('productMaster.html') // serving path.join(__dirname, 'public', 'myHtml.html') directly
     })

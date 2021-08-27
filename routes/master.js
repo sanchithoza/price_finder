@@ -23,10 +23,10 @@ async function routes(fastify, options) {
             reply.status(400).send(error);
         })
     })
-    fastify.post('/products', async(request, reply) => {
-        console.log(request.body);
+    fastify.get('/getProductsByOrgId/:orgId', async(request, reply) => {
+        console.log(request.params.orgId);
         //return newpost
-        knex.select().table('tbl_products').where({ "organization_id": request.body.organization_id }).then((result) => {
+        knex.select().table('tbl_products').where({ "organization_id": request.params.orgId }).then((result) => {
             console.log(result);
             if (result.length) {
                 reply.status(200).send(result);

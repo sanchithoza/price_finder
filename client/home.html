@@ -83,12 +83,9 @@
         $(document).ready(function() {
             $('#submitCart').hide();
             $.ajax({
-                type: "POST",
+                type: "GET",
                 dataType: "application/json",
-                url: `${url}/master/products`,
-                data: {
-                    "organization_id": sessionStorage.getItem("organization_id")
-                },
+                url: `${url}/master/getProductsByOrgId/${sessionStorage.getItem("organization_id")}`,
                 dataType: 'json',
                 success: async function(data) {
                     productList = data;
@@ -112,16 +109,14 @@
                     console.log("Add user Ajax ERROR: ", e);
                 }
             });
-            $.post(`${url}/master/products`, async function(data) {
 
-            });
             //----------------------------
             //add product modal events
             //---------------------------
 
             $("#submitCart").click(function() {
                 sessionStorage.setItem("cartData", JSON.stringify(cartData));
-                window.location.href = "createQuotation.html";
+                window.location.href = `${url}/ui/createQuotation`;
             });
         });
         let cartData = []

@@ -79,12 +79,9 @@
     <script>
         $(document).ready(function() {
             $.ajax({
-                    type: "POST",
+                    type: "GET",
                     dataType: "application/json",
-                    url: `${url}/master/products`,
-                    data: {
-                        "organization_id": sessionStorage.getItem("organization_id")
-                    },
+                    url: `${url}/master/getProductsByOrgId/${sessionStorage.getItem("organization_id")}`,
                     dataType: 'json',
                     success: async function(data) {
                         console.log("populating data table...", data);
