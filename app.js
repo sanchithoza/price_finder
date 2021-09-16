@@ -1,4 +1,5 @@
 const fastify = require("./main");
 
-fastify.listen(9000);
-console.log("up on 9000")
+var PORT = process.env.PORT || 9000
+fastify.listen(PORT);
+console.log(`Up on ${PORT}`)
