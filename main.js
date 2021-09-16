@@ -13,9 +13,11 @@ fastify.register(require('fastify-cors'), {
 
 //fastify.register(require('fastify-multipart'))
 fastify.register(require('fastify-formbody'))
-
-//database connection
-//routes
+fastify.get('/', function(req, reply) {
+        return reply.sendFile('index.html') // serving path.join(__dirname, 'public', 'myHtml.html') directly
+    })
+    //database connection
+    //routes
 fastify.register(require('./client/ui_route'), { prefix: '/ui' })
 fastify.register(require('./routes/master'), { prefix: '/master' });
 fastify.register(require('./routes/organization'), { prefix: '/organization' });
