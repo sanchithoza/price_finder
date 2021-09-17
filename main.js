@@ -14,7 +14,7 @@ fastify.register(require('fastify-cors'), {
 //fastify.register(require('fastify-multipart'))
 fastify.register(require('fastify-formbody'))
 fastify.get('/', function(req, reply) {
-        return reply.sendFile('index.html') // serving path.join(__dirname, 'public', 'myHtml.html') directly
+        return reply.sendFile('client/index.html') // serving path.join(__dirname, 'public', 'myHtml.html') directly
     })
     //database connection
     //routes
