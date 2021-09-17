@@ -1,4 +1,7 @@
 const fastify = require("./main");
 
-var port_number = fastify.listen(process.env.PORT || 3000);
-app.listen(port_number);
+const { PORT = 3000, LOCAL_ADDRESS = '0.0.0.0' } = process.env
+fastify.listen(PORT, LOCAL_ADDRESS, () => {
+    const address = fastify.address();
+    console.log('server listening at', address);
+});
